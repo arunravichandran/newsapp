@@ -1,12 +1,17 @@
 package com.example.newsapp;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.example.newsapp.api.ApiClient;
 import com.example.newsapp.api.ApiInterFace;
 import com.example.newsapp.models.Article;
@@ -38,16 +43,24 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setNestedScrollingEnabled(false);
-        LoadJson();
+        LoadJson("");
     }
 
-    public void LoadJson(){
+    public void LoadJson(final String keyword){
         ApiInterFace apiInterFace = ApiClient.getApiClient().create(ApiInterFace.class);
 
         String country = Utils.getCountry();
+        String language = Utils.getLanguage();
 
         Call<News> call;
-        call=apiInterFace.getNews(country,API_KEY);
+
+        if (keyword.length()>0){
+            call = apiInterFace.getNewsSearch(keyword,language,"publishedAt",API_KEY);
+        } else {
+            call = apiInterFace.getNews(country,API_KEY);
+
+        }
+
 
         call.enqueue(new Callback<News>() {
             @Override
@@ -72,5 +85,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main,menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setQueryHint("Search");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query.length() > 2){
+                    LoadJson(query);
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "Type more than two letters!", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                LoadJson(newText);
+                return false;
+            }
+        });
+
+        searchMenuItem.getIcon().setVisible(false, false);
+
+        return true;
     }
 }
