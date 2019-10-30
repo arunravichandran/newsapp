@@ -3,34 +3,36 @@ package com.example.newsapp.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-class Article {
+
+
+public class Article {
     @SerializedName("source")
     @Expose
     private Source source;
 
     @SerializedName("author")
     @Expose
-    private Source author;
+    private String author;
 
     @SerializedName("title")
     @Expose
-    private Source title;
+    private String  title;
 
     @SerializedName("description")
     @Expose
-    private Source description;
+    private String description;
 
     @SerializedName("url")
     @Expose
-    private Source url;
+    private String url;
 
-    @SerializedName("urlImage")
+    @SerializedName("urlToImage")
     @Expose
-    private Source urlImage;
+    private String urlToImage;
 
     @SerializedName("publishedAt")
     @Expose
-    private Source publishedAt;
+    private String publishedAt;
 
     public Source getSource() {
         return source;
@@ -40,51 +42,51 @@ class Article {
         this.source = source;
     }
 
-    public Source getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(Source author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 
-    public Source getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(Source title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public Source getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Source description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public Source getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(Source url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 
-    public Source getUrlImage() {
-        return urlImage;
+    public String geturlToImage() {
+        return urlToImage;
     }
 
-    public void setUrlImage(Source urlImage) {
-        this.urlImage = urlImage;
+    public void seturlToImage(String urlToImage) {
+        this.urlToImage = urlToImage;
     }
 
-    public Source getPublishedAt() {
+    public String getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(Source publishedAt) {
+    public void setPublishedAt(String publishedAt) {
         this.publishedAt = publishedAt;
     }
 }
