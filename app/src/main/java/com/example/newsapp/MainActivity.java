@@ -3,6 +3,7 @@ package com.example.newsapp;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.newsapp.api.ApiClient;
 import com.example.newsapp.api.ApiInterFace;
@@ -27,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String API_KEY= "2c034212f7614bac9a7778c044333f70";
     private RecyclerView recyclerView;
@@ -35,21 +37,31 @@ public class MainActivity extends AppCompatActivity {
     private List<Article> articles = new ArrayList<>();
     private Adapter adapter;
     private String TAG = MainActivity.class.getSimpleName();
+    private TextView topHeadline;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        topHeadline = findViewById(R.id.topHeadline);
+
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         recyclerView = findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setNestedScrollingEnabled(false);
-        LoadJson("");
+        onLoadingSwipeRefresh("");
     }
 
     public void LoadJson(final String keyword){
+
+        topHeadline.setVisibility(View.INVISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
+
         ApiInterFace apiInterFace = ApiClient.getApiClient().create(ApiInterFace.class);
 
         String country = Utils.getCountry();
@@ -76,15 +88,22 @@ public class MainActivity extends AppCompatActivity {
                     adapter = new Adapter(articles, MainActivity.this);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
+
+                    topHeadline.setVisibility(View.VISIBLE);
+                    swipeRefreshLayout.setRefreshing(false);
                     initListener();
                 }
                 else {
+                    topHeadline.setVisibility(View.INVISIBLE);
+                    swipeRefreshLayout.setRefreshing(false);
                     Toast.makeText(MainActivity.this,"No Result",Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<News> call, Throwable t) {
+                topHeadline.setVisibility(View.INVISIBLE);
+                swipeRefreshLayout.setRefreshing(false);
 
             }
         });
@@ -132,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query.length() > 2){
-                    LoadJson(query);
+                    onLoadingSwipeRefresh(query);
                 }
                 else {
                     Toast.makeText(MainActivity.this, "Type more than two letters!", Toast.LENGTH_SHORT).show();
@@ -142,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                LoadJson(newText);
+                
                 return false;
             }
         });
@@ -164,5 +183,22 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        LoadJson("");
+    }
+
+    private void onLoadingSwipeRefresh(final String keyword)
+    {
+        swipeRefreshLayout.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                            LoadJson(keyword);
+                    }
+                }
+        );
     }
 }
