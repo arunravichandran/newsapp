@@ -14,9 +14,9 @@
             android:theme="@android:style/Theme.Holo.Light.DarkActionBar"/>
 
         <item
-            android:id="@+id/action_settings"
+            android:id="@+id/action_Exit"
             android:orderInCategory="100"
-            android:title="Settings"
+            android:title="Exit"
             app:showAsAction="never"/>
 
     </menu>

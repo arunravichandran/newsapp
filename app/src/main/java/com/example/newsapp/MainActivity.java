@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
@@ -122,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        MenuItem Exit=menu.findItem(R.id.action_Exit);
+
+
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setQueryHint("Search");
@@ -147,5 +150,19 @@ public class MainActivity extends AppCompatActivity {
         searchMenuItem.getIcon().setVisible(false, false);
 
         return true;
+    }
+    public void onExit() {
+
+        finish();
+        System.exit(0);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_Exit:
+                onExit();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
