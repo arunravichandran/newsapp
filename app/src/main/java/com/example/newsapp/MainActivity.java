@@ -3,13 +3,13 @@ package com.example.newsapp;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private RecyclerView.LayoutManager layoutManager;
     private List<Article> articles = new ArrayList<>();
     private Adapter adapter;
-    private String TAG = MainActivity.class.getSimpleName();
     private TextView topHeadline;
     private SwipeRefreshLayout swipeRefreshLayout;
 
