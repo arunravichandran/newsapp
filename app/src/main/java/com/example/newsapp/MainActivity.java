@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +24,7 @@ import com.example.newsapp.api.ApiInterFace;
 import com.example.newsapp.models.Article;
 import com.example.newsapp.models.News;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,7 +173,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return true;
     }
     public void onExit() {
-
+        try {
+            trimCache(this);
+            Log.v("Hi","onDestroy called");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         finish();
         System.exit(0);
     }
@@ -184,6 +192,50 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        try {
+            trimCache(this);
+            Log.v("Hi","onDestroy called");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void trimCache(Context context){
+        try {
+            File dir= context.getCacheDir();
+            if(dir!=null && dir.isDirectory()){
+                deleteDir(dir);
+            }
+        }catch (Exception e){
+
+        }
+    }
+
+    public static boolean deleteDir(File dir)
+    {
+        if (dir!=null && dir.isDirectory())
+        {
+            String[] children = dir.list();
+            for(int i =0;i<children.length;i++) {
+                boolean success = deleteDir(new File(dir,children[i]));
+                if(!success){
+                    return false;
+            }
+            }
+        }
+        return dir.delete();
+
+    }
     @Override
     public void onRefresh() {
         LoadJson("");
