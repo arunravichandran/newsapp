@@ -5,7 +5,8 @@ Features:
  * Search Article
  * SwipeRefreshLayout
  * Clear cache on app exit
-
+ * Error handling
+ 
 Modules:  
   * API:  
     * API_Client - SSL Socket connection
