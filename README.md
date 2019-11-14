@@ -4,6 +4,7 @@ Features:
  * Fetches News from many sources 
  * Search Article
  * SwipeRefreshLayout
+ * Clear cache on app exit
 
 Modules:  
   * API:  
